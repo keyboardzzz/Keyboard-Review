@@ -66,7 +66,7 @@ function initMood() {
         'imageshack watermark', 'thread necro', 'ltspice agrees', 
         'pink noise ritual', 'up to isomorphism', 'measure zero',
         'assume 27 adribiotic pigs are frictionless', 'heap smells weird',
-        'works under gdb', 'no further context', 'being and keyness'.
+        'works under gdb', 'no further context', 'being and keyness',
         'plato’s ideal switch', 'the medium is the keyboard', 'ethics of actuation',
         'existence precedes layout', 'noumenal thock', 'repressed tactility',
         'thock as symptom', 'id, ego, keycap', 'qed but clicky', 
