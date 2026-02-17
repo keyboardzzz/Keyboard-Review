@@ -1,370 +1,632 @@
-// App State
+// ─── STATE ───────────────────────────────────────
 let currentFilter = 'all';
-let currentSort = 'latest';
-let searchTerm = '';
+let currentSort   = 'default';
+let searchTerm    = '';
 
-// Initialize on page load
+// ─── BOOT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    renderContentGrid();
+    renderGrid();
     updateStats();
-    initializeSearch();
-    initializeScrollEffects();
+    initMood();
+    initParallax();
+    document.getElementById('searchInput').addEventListener('input', e => {
+        searchTerm = e.target.value.toLowerCase().trim();
+        renderGrid();
+    });
+    initProgressBar();
 });
 
-// Scroll Effects
-function initializeScrollEffects() {
-    const nav = document.getElementById('mainNav');
+// ─── MOOD CHIP ────────────────────────────────────
+function initMood() {
+    const moods = [
+        'New reviews up', 'Fresh picks in', 'Good typing weather',
+        'Updated guides', 'Clicky vibes only', '3 new reviews'
+    ];
+    const el = document.getElementById('moodText');
+    if (el) el.textContent = moods[Math.floor(Math.random() * moods.length)];
+}
+
+// ─── HERO PARALLAX ────────────────────────────────
+function initParallax() {
+    const dots = document.getElementById('heroDots');
+    if (!dots) return;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
+        const y = window.scrollY;
+        dots.style.transform = `translateY(${y * 0.25}px)`;
+    }, { passive: true });
+}
+
+// ─── PROGRESS BAR ────────────────────────────────
+function initProgressBar() {
+    const bar = document.getElementById('readProgress');
+    window.addEventListener('scroll', () => {
+        const isArticle = document.getElementById('articleView').classList.contains('active');
+        if (!isArticle) { bar.classList.remove('active'); bar.style.width = '0%'; return; }
+        bar.classList.add('active');
+        const scrolled = window.scrollY;
+        const total = document.body.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? Math.min((scrolled / total) * 100, 100) + '%' : '0%';
+        highlightTOC();
     });
 }
 
-// Search Functionality
-function initializeSearch() {
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-        searchTerm = e.target.value.toLowerCase();
-        renderContentGrid();
+// ─── SCROLL-AWARE TOC ────────────────────────────
+function highlightTOC() {
+    const links = document.querySelectorAll('.toc-link');
+    let current = '';
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+        const id = href.replace('#','');
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top < 140) current = id;
+    });
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        link.classList.toggle('active', href === '#' + current);
     });
 }
 
-// Filter Content
-function filterContent(type) {
-    currentFilter = type;
-    
-    // Update active tab
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.getAttribute('data-filter') === type) {
-            tab.classList.add('active');
-        }
-    });
-    
-    renderContentGrid();
-    
-    // Scroll to content
-    document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
-}
+// ─── GRID ────────────────────────────────────────
+function renderGrid() {
+    let list = articles;
+    if (currentFilter !== 'all') list = list.filter(a => a.type === currentFilter);
+    if (searchTerm) list = list.filter(a =>
+        a.title.toLowerCase().includes(searchTerm) ||
+        a.excerpt.toLowerCase().includes(searchTerm)
+    );
+    if (currentSort === 'rating') list = [...list].sort((a, b) => (b.rating||0) - (a.rating||0));
 
-// Sort Content
-function sortContent(sortType) {
-    currentSort = sortType;
-    renderContentGrid();
-}
+    document.getElementById('articleCountLabel').textContent = `${list.length} article${list.length !== 1 ? 's' : ''}`;
 
-// Get Filtered & Sorted Articles
-function getFilteredArticles() {
-    let filtered = articles;
-    
-    // Apply filter
-    if (currentFilter !== 'all') {
-        filtered = filtered.filter(a => a.type === currentFilter);
-    }
-    
-    // Apply search
-    if (searchTerm) {
-        filtered = filtered.filter(a => 
-            a.title.toLowerCase().includes(searchTerm) ||
-            a.excerpt.toLowerCase().includes(searchTerm)
-        );
-    }
-    
-    // Apply sort
-    if (currentSort === 'rating') {
-        filtered = filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    } else if (currentSort === 'popular') {
-        filtered = filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
-    }
-    // Latest is default order
-    
-    return filtered;
-}
-
-// Render Content Grid with Varied Layouts
-function renderContentGrid() {
     const grid = document.getElementById('contentGrid');
-    const filtered = getFilteredArticles();
-    
-    if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 3rem;">No articles found</p>';
-        return;
-    }
-    
-    // Assign card sizes for variety
-    const cardSizes = ['featured', 'large', 'tall', 'standard', 'standard', 'large', 'standard', 'tall', 'standard', 'standard'];
-    
-    const html = filtered.map((article, index) => {
-        const size = index < cardSizes.length ? cardSizes[index] : 'standard';
-        const showExcerpt = size !== 'standard';
-        const showQuickInfo = article.type === 'review' && article.rating;
-        
-        return `
-            <div class="card ${size}" onclick="showArticle('${article.id}')">
-                <div class="card-image">
-                    <img src="${article.image}" alt="${article.title}">
-                    <div class="card-badge ${article.type}">${article.type === 'review' ? 'Review' : 'Guide'}</div>
-                    ${showQuickInfo ? `
-                        <div class="card-quick-info">
-                            <div class="quick-info-title">${article.title}</div>
-                            <ul class="quick-info-list">
-                                <li><strong>Rating:</strong> ${article.rating}/10</li>
-                                ${article.price ? `<li><strong>Price:</strong> ${article.price}</li>` : ''}
-                                ${article.specs ? `<li><strong>Type:</strong> ${article.specs.Layout}</li>` : ''}
-                            </ul>
-                            <div class="quick-btn">View Full Review</div>
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="card-overlay">
-                    <div class="card-meta">
-                        <span>${article.date}</span>
-                        ${article.rating ? `<span>★ ${article.rating}/10</span>` : ''}
-                    </div>
-                    <div class="card-title">${article.title}</div>
-                    ${showExcerpt ? `<div class="card-excerpt">${article.excerpt}</div>` : ''}
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    grid.innerHTML = html;
+    grid.innerHTML = list.length === 0
+        ? '<p style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--text-lite)">No articles found.</p>'
+        : list.map((a, i) => {
+            const size = i === 0 ? 'wide' : i === 2 ? 'tall' : i > 0 && i % 7 === 0 ? 'wide' : '';
+            return cardHTML(a, size, i);
+        }).join('');
 }
 
-// Show Article
-function showArticle(id) {
-    const article = articles.find(a => a.id === id);
-    if (!article) return;
-    
-    // Increment views
-    article.views = (article.views || 0) + 1;
-    
-    let content = '';
-    if (article.type === 'review') {
-        content = renderReview(article);
-    } else {
-        content = renderRecommendation(article);
-    }
-    
-    document.getElementById('articleContent').innerHTML = content;
+function cardHTML(a, size = '', index = 0) {
+    const isReview = a.type === 'review';
+    const readMins = isReview ? Math.ceil(Math.random() * 4 + 5) : Math.ceil(Math.random() * 2 + 2);
+    const delay = Math.min(index * 60, 400);
+    return `
+    <div class="card ${size}" onclick="openArticle('${a.id}')" style="animation-delay:${delay}ms">
+        <div class="card-img">
+            <img src="${a.image}" alt="${a.title}" loading="lazy">
+            <div class="card-badges">
+                <span class="badge ${isReview ? 'badge-review' : 'badge-guide'}">${isReview ? 'Review' : 'Guide'}</span>
+                ${a.hot ? '<span class="badge badge-hot">🔥 Hot</span>' : ''}
+            </div>
+            ${a.rating ? `<div class="card-rating-chip">★ ${a.rating}</div>` : ''}
+        </div>
+        <div class="card-body">
+            <div class="card-meta">
+                ${a.date}${a.price ? ' · ' + a.price : ''}
+                <span class="read-time">☕ ${readMins} min</span>
+            </div>
+            <div class="card-title">${a.title}</div>
+            ${size !== '' ? `<div class="card-excerpt">${a.excerpt}</div>` : ''}
+            <div class="card-footer">
+                <span class="card-tag">${a.category || (isReview ? 'Review' : 'Guide')}</span>
+                <span class="card-link">Read →</span>
+            </div>
+        </div>
+    </div>`;
+}
+
+// ─── ARTICLE ─────────────────────────────────────
+function openArticle(id) {
+    const a = articles.find(x => x.id === id);
+    if (!a) return;
+    a.views = (a.views || 0) + 1;
+    const html = a.type === 'review' ? reviewHTML(a) : guideHTML(a);
+    document.getElementById('articleContent').innerHTML = html;
+    buildTOC(a);
     document.getElementById('homeView').classList.add('hidden');
     document.getElementById('articleView').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Render Review Article
-function renderReview(article) {
-    return `
-        <article>
-            <div class="article-hero">
-                <h1>${article.title}</h1>
-                <div class="article-meta-bar">
-                    <div class="meta-info">
-                        <span>📅 ${article.date}</span>
-                        <span>📖 ${Math.ceil(Math.random() * 5 + 3)} min read</span>
-                        <span>👁️ ${article.views || 0} views</span>
-                    </div>
-                    ${article.rating ? `
-                        <div class="rating-display">
-                            <div class="rating-number">${article.rating}</div>
-                            <div>
-                                <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--text-light);">Overall</div>
-                                <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--text-light);">Score</div>
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-
-            <div class="article-content">
-                ${article.images && article.images.length > 0 ? `
-                    <div class="image-gallery">
-                        ${article.images.map(img => `<img src="${img}" alt="${article.title}" class="gallery-img">`).join('')}
-                    </div>
-                ` : ''}
-
-                ${article.summary ? `
-                    <div class="content-block">
-                        <h2>Quick Take</h2>
-                        <p><strong>${article.summary}</strong></p>
-                    </div>
-                ` : ''}
-
-                <div class="cta-box">
-                    <h3>Buy ${article.title}</h3>
-                    <p>${article.price ? `Current Price: ${article.price} • ` : ''}Check latest deals on Amazon</p>
-                    <a href="${article.amazonLink}" class="cta-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
-                </div>
-
-                ${article.specs ? `
-                    <div class="content-block">
-                        <h2>Technical Specifications</h2>
-                        <div class="specs-grid">
-                            ${Object.entries(article.specs).map(([key, value]) => `
-                                <div class="spec-card">
-                                    <div class="spec-label">${key}</div>
-                                    <div class="spec-value">${value}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-
-                ${article.fullReview ? `
-                    <div class="content-block">
-                        <h2>Full Review</h2>
-                        ${article.fullReview.map(section => `
-                            <h3 style="font-size: 1.5rem; margin: 2rem 0 1rem; font-weight: 700;">${section.heading}</h3>
-                            ${section.paragraphs.map(p => `<p>${p}</p>`).join('')}
-                            ${section.image ? `<img src="${section.image}" alt="${section.heading}" style="width: 100%; border-radius: 16px; margin: 2rem 0;">` : ''}
-                        `).join('')}
-                    </div>
-                ` : ''}
-
-                ${article.pros || article.cons ? `
-                    <div class="content-block">
-                        <h2>Pros & Cons</h2>
-                        <div class="pros-cons-grid">
-                            ${article.pros ? `
-                                <div class="pros-card">
-                                    <h3>👍 What's Great</h3>
-                                    <ul>
-                                        ${article.pros.map(pro => `<li>${pro}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            ${article.cons ? `
-                                <div class="cons-card">
-                                    <h3>👎 What's Not</h3>
-                                    <ul>
-                                        ${article.cons.map(con => `<li>${con}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                ` : ''}
-
-                ${article.verdict ? `
-                    <div class="content-block">
-                        <h2>Final Verdict</h2>
-                        <p>${article.verdict}</p>
-                        ${article.bestFor ? `<p><strong>Best For:</strong> ${article.bestFor}</p>` : ''}
-                    </div>
-                ` : ''}
-
-                <div class="cta-box">
-                    <h3>Ready to Purchase?</h3>
-                    <p>Get the ${article.title} at the best price</p>
-                    <a href="${article.amazonLink}" class="cta-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
-                </div>
-
-                ${article.relatedArticles && article.relatedArticles.length > 0 ? `
-                    <div class="content-block">
-                        <h2>Related Articles</h2>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                            ${article.relatedArticles.map(relId => {
-                                const rel = articles.find(a => a.id === relId);
-                                return rel ? `
-                                    <div style="cursor: pointer; padding: 1rem; background: var(--bg-subtle); border-radius: 12px;" onclick="showArticle('${rel.id}')">
-                                        <img src="${rel.image}" alt="${rel.title}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;">
-                                        <h4 style="font-size: 1rem; font-weight: 600;">${rel.title}</h4>
-                                    </div>
-                                ` : '';
-                            }).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-
-                <div style="background: #fffbeb; border: 2px solid #fde68a; padding: 1.5rem; border-radius: 12px; margin-top: 3rem; font-size: 0.9rem; color: #92400e;">
-                    <strong>Disclosure:</strong> This article may contain affiliate links. We may earn a commission from purchases made through these links at no additional cost to you. AI assisted with formatting; all testing and opinions are human-generated.
-                </div>
-            </div>
-        </article>
-    `;
+// ─── TABLE OF CONTENTS ────────────────────────────
+function buildTOC(a) {
+    const sections = [];
+    if (a.type === 'review') {
+        sections.push({ id: 'overview', label: 'Overview' });
+        if (a.specs)     sections.push({ id: 'specs', label: 'Specifications' });
+        if (a.fullReview) a.fullReview.forEach((s, i) => sections.push({ id: `section-${i}`, label: s.heading }));
+        if (a.pros)      sections.push({ id: 'procons', label: 'Pros & Cons' });
+        sections.push({ id: 'verdict', label: 'Verdict' });
+    } else {
+        sections.push({ id: 'overview', label: 'Overview' });
+        sections.push({ id: 'picks', label: 'Top Picks' });
+        sections.push({ id: 'verdict', label: 'Final Thoughts' });
+    }
+    document.getElementById('tocLinks').innerHTML = sections.map((s, i) => `
+        <a class="toc-link" href="#${s.id}" onclick="scrollToSection('${s.id}'); return false;">${s.label}</a>
+        ${i === 0 ? '<div class="toc-sep"></div>' : ''}
+    `).join('');
 }
 
-// Render Recommendation Article
-function renderRecommendation(article) {
-    return `
-        <article>
-            <div class="article-hero">
-                <h1>${article.title}</h1>
-                <div class="article-meta-bar">
-                    <div class="meta-info">
-                        <span>📅 ${article.date}</span>
-                        <span>📖 ${Math.ceil(Math.random() * 4 + 2)} min read</span>
-                        <span>👁️ ${article.views || 0} views</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="article-content">
-                ${article.intro ? `
-                    <div class="content-block">
-                        <p style="font-size: 1.2rem; line-height: 1.8;"><strong>${article.intro}</strong></p>
-                    </div>
-                ` : ''}
-
-                <div class="content-block">
-                    <h2>Our Top Picks</h2>
-                    ${article.recommendations ? article.recommendations.map((rec, index) => `
-                        <div class="recommendation-card">
-                            <div class="rec-header">
-                                <h3>${index + 1}. ${rec.name}</h3>
-                                ${rec.price ? `<div class="rec-price">${rec.price}</div>` : ''}
-                            </div>
-                            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text); margin: 1rem 0;">${rec.description}</p>
-                            ${rec.highlights && rec.highlights.length > 0 ? `
-                                <div style="background: var(--bg-subtle); padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
-                                    <strong style="display: block; margin-bottom: 1rem;">Key Features:</strong>
-                                    <ul style="list-style: none; padding: 0;">
-                                        ${rec.highlights.map(h => `<li style="padding: 0.4rem 0; padding-left: 1.5rem; position: relative;">
-                                            <span style="position: absolute; left: 0; color: var(--primary);">✓</span>
-                                            ${h}
-                                        </li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            <div class="rec-buttons">
-                                ${rec.reviewLink ? `
-                                    <a href="#" onclick="showArticle('${rec.reviewLink}'); return false;" class="btn" style="background: var(--bg-subtle); color: var(--text);">Read Full Review</a>
-                                ` : ''}
-                                <a href="${rec.amazonLink}" class="btn btn-primary" target="_blank" rel="nofollow noopener" style="background: var(--primary); color: white;">View on Amazon →</a>
-                            </div>
-                        </div>
-                    `).join('') : ''}
-                </div>
-
-                ${article.verdict ? `
-                    <div class="content-block">
-                        <h2>Final Recommendation</h2>
-                        <p style="font-size: 1.1rem; line-height: 1.8;">${article.verdict}</p>
-                    </div>
-                ` : ''}
-
-                <div style="background: #fffbeb; border: 2px solid #fde68a; padding: 1.5rem; border-radius: 12px; margin-top: 3rem; font-size: 0.9rem; color: #92400e;">
-                    <strong>Disclosure:</strong> This article contains affiliate links. We may earn a commission from purchases at no additional cost to you.
-                </div>
-            </div>
-        </article>
-    `;
+function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Show Home
+// ─── REVIEW HTML ─────────────────────────────────
+function reviewHTML(a) {
+    const subScores = a.subScores || {};
+    return `
+    <div class="article-card">
+        <div class="article-label" id="overview">${a.category || 'Review'}</div>
+        <h1 class="article-title">${a.title}</h1>
+        <div class="article-byline">
+            <span>📅 ${a.date}</span>
+            ${a.price ? `<span>💰 ${a.price}</span>` : ''}
+            <span>👁 ${a.views || 1} views</span>
+        </div>
+
+        ${a.images && a.images.length ? `<div class="img-gallery">${a.images.map(img=>`<img src="${img}" alt="${a.title}" loading="lazy">`).join('')}</div>` : ''}
+
+        ${a.rating ? `
+        <div class="score-row">
+            <div class="score-overall">
+                <div class="big">${a.rating}</div>
+                <div class="lbl">Overall</div>
+            </div>
+            ${Object.keys(subScores).length ? `
+            <div class="sub-scores">
+                <div class="sub-scores-title">Score Breakdown</div>
+                ${Object.entries(subScores).map(([k,v]) => `
+                <div class="sub-score-row">
+                    <div class="sub-score-label">${k}</div>
+                    <div class="sub-score-bar"><div class="sub-score-fill" style="width:${v*10}%"></div></div>
+                    <div class="sub-score-num">${v}</div>
+                </div>`).join('')}
+            </div>` : ''}
+        </div>` : ''}
+
+        ${a.useCases ? `
+        <div class="use-cases">
+            ${a.useCases.map(u => `
+            <div class="use-case">
+                <span class="uc-icon">${u.icon}</span>
+                <span class="uc-label">${u.label}</span>
+                <div class="uc-stars">${'★'.repeat(u.stars)}<span class="dim">${'★'.repeat(5-u.stars)}</span></div>
+            </div>`).join('')}
+        </div>` : ''}
+
+        ${a.summary ? `<div class="summary-box"><strong>Quick Take:</strong> ${a.summary}</div>` : ''}
+
+        <div class="amazon-cta">
+            <h3>Buy the ${a.title.replace(' Review','')}</h3>
+            <p>${a.price ? `Current price: ${a.price} · ` : ''}Check latest deals on Amazon</p>
+            <a href="${a.amazonLink}" class="amazon-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+        </div>
+
+        ${a.specs ? `
+        <div class="art-section" id="specs">
+            <h2>Specifications</h2>
+            <div class="specs-grid">
+                ${Object.entries(a.specs).map(([k,v]) => `
+                <div class="spec-card">
+                    <div class="spec-lbl">${k}</div>
+                    <div class="spec-val">${v}</div>
+                </div>`).join('')}
+            </div>
+        </div>` : ''}
+
+        ${a.fullReview ? a.fullReview.map((s, i) => `
+        <div class="art-section" id="section-${i}">
+            <h2>${s.heading}</h2>
+            ${s.paragraphs.map(p => `<p>${p}</p>`).join('')}
+            ${s.image ? `<img src="${s.image}" alt="${s.heading}">` : ''}
+        </div>`).join('') : ''}
+
+        ${a.pros || a.cons ? `
+        <div class="art-section" id="procons">
+            <h2>Pros & Cons</h2>
+            <div class="pros-cons">
+                ${a.pros ? `<div class="pros-card"><h3>What's Great</h3><ul>${a.pros.map(p=>`<li>${p}</li>`).join('')}</ul></div>` : ''}
+                ${a.cons ? `<div class="cons-card"><h3>Watch Out For</h3><ul>${a.cons.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : ''}
+            </div>
+        </div>` : ''}
+
+        ${a.verdict ? `
+        <div class="art-section" id="verdict">
+            <h2>Verdict</h2>
+            <div class="verdict-box">
+                <h3>Our Take</h3>
+                <p>${a.verdict}</p>
+                ${a.bestFor ? `<div class="best-for"><strong>Best For:</strong> ${a.bestFor}</div>` : ''}
+            </div>
+        </div>` : ''}
+
+        <div class="amazon-cta">
+            <h3>Ready to Buy?</h3>
+            <p>Get the best price on Amazon</p>
+            <a href="${a.amazonLink}" class="amazon-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+        </div>
+
+        ${a.relatedArticles && a.relatedArticles.length ? `
+        <div class="art-section">
+            <h2>Related Articles</h2>
+            <div class="related-grid">
+                ${a.relatedArticles.map(id => {
+                    const r = articles.find(x => x.id === id);
+                    return r ? `
+                    <div class="related-card" onclick="openArticle('${r.id}')">
+                        <img src="${r.image}" alt="${r.title}" loading="lazy">
+                        <div class="related-card-body"><h4>${r.title}</h4></div>
+                    </div>` : '';
+                }).join('')}
+            </div>
+        </div>` : ''}
+    </div>`;
+}
+
+// ─── GUIDE HTML ──────────────────────────────────
+function guideHTML(a) {
+    return `
+    <div class="article-card">
+        <div class="article-label" id="overview">Buying Guide</div>
+        <h1 class="article-title">${a.title}</h1>
+        <div class="article-byline">
+            <span>📅 ${a.date}</span>
+            <span>👁 ${a.views || 1} views</span>
+        </div>
+
+        ${a.intro ? `<div class="summary-box">${a.intro}</div>` : ''}
+
+        <div id="picks">
+        ${a.recommendations ? a.recommendations.map((r, i) => `
+        <div class="rec-item">
+            <div class="rec-top">
+                <div class="rec-name">${i + 1}. ${r.name}${r.tag ? `<span>${r.tag}</span>` : ''}</div>
+                ${r.price ? `<div class="rec-price">${r.price}</div>` : ''}
+            </div>
+            <div class="rec-desc">${r.description}</div>
+            ${r.highlights ? `<div class="rec-highlights">${r.highlights.map(h=>`<span class="rec-highlight">✓ ${h}</span>`).join('')}</div>` : ''}
+            <div class="rec-btns">
+                ${r.reviewLink ? `<a href="#" class="btn-sm btn-ghost" onclick="openArticle('${r.reviewLink}'); return false;">Full Review</a>` : ''}
+                <a href="${r.amazonLink}" class="btn-sm btn-primary" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+            </div>
+        </div>`).join('') : ''}
+        </div>
+
+        ${a.verdict ? `
+        <div class="verdict-box" id="verdict">
+            <h3>Our Final Recommendation</h3>
+            <p>${a.verdict}</p>
+        </div>` : ''}
+
+        ${a.relatedArticles && a.relatedArticles.length ? `
+        <div class="art-section">
+            <h2>Related Reviews</h2>
+            <div class="related-grid">
+                ${a.relatedArticles.map(id => {
+                    const r = articles.find(x => x.id === id);
+                    return r ? `
+                    <div class="related-card" onclick="openArticle('${r.id}')">
+                        <img src="${r.image}" alt="${r.title}" loading="lazy">
+                        <div class="related-card-body"><h4>${r.title}</h4></div>
+                    </div>` : '';
+                }).join('')}
+            </div>
+        </div>` : ''}
+    </div>`;
+}
+
+// ─── SHOW HOME ───────────────────────────────────
+function showHome() {
+    document.getElementById('homeView').classList.remove('hidden');
+    document.getElementById('articleView').classList.remove('active');
+    document.getElementById('readProgress').classList.remove('active');
+    document.getElementById('readProgress').style.width = '0%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── STATS ───────────────────────────────────────
+function updateStats() {
+    document.getElementById('reviewCount').textContent = articles.filter(a => a.type === 'review').length;
+    document.getElementById('guideCount').textContent  = articles.filter(a => a.type === 'recommendation').length;
+}
+
+
+// ─── FILTER / SORT ───────────────────────────────
+function setFilter(f) {
+    currentFilter = f;
+    document.querySelectorAll('.ftab, .hero-pill').forEach(el => {
+        el.classList.toggle('active', el.dataset.f === f || el.textContent.trim().toLowerCase().replace(' ','') === f);
+    });
+    const labels = { all: 'Latest Articles', review: 'Reviews', recommendation: 'Buying Guides' };
+    const lbl = document.getElementById('gridLabel');
+    if (lbl) lbl.textContent = labels[f] || 'Articles';
+    renderGrid();
+    showHome();
+    document.getElementById('contentGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setSort(s) { currentSort = s; renderGrid(); }
+
+// ─── GRID ────────────────────────────────────────
+function renderGrid() {
+    let list = articles;
+    if (currentFilter !== 'all') list = list.filter(a => a.type === currentFilter);
+    if (searchTerm) list = list.filter(a =>
+        a.title.toLowerCase().includes(searchTerm) ||
+        a.excerpt.toLowerCase().includes(searchTerm)
+    );
+    if (currentSort === 'rating') list = [...list].sort((a, b) => (b.rating||0) - (a.rating||0));
+
+    document.getElementById('articleCountLabel').textContent = `${list.length} article${list.length !== 1 ? 's' : ''}`;
+
+    // Card size pattern: first = wide, second = tall, rest = standard, every 7th = wide
+    const grid = document.getElementById('contentGrid');
+    grid.innerHTML = list.length === 0
+        ? '<p style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--text-lite)">No articles found.</p>'
+        : list.map((a, i) => {
+            const size = i === 0 ? 'wide' : i === 2 ? 'tall' : i > 0 && i % 7 === 0 ? 'wide' : '';
+            return cardHTML(a, size);
+        }).join('');
+}
+
+function cardHTML(a, size = '') {
+    const isReview = a.type === 'review';
+    const readMins = isReview ? Math.ceil(Math.random() * 4 + 5) : Math.ceil(Math.random() * 2 + 2);
+    return `
+    <div class="card ${size}" onclick="openArticle('${a.id}')">
+        <div class="card-img">
+            <img src="${a.image}" alt="${a.title}" loading="lazy">
+            <div class="card-badges">
+                <span class="badge ${isReview ? 'badge-review' : 'badge-guide'}">${isReview ? 'Review' : 'Guide'}</span>
+                ${a.hot ? '<span class="badge badge-hot">🔥 Hot</span>' : ''}
+            </div>
+            ${a.rating ? `<div class="card-rating-chip">★ ${a.rating}</div>` : ''}
+        </div>
+        <div class="card-body">
+            <div class="card-meta">
+                ${a.date}${a.price ? ' · ' + a.price : ''}
+                <span class="read-time">☕ ${readMins} min</span>
+            </div>
+            <div class="card-title">${a.title}</div>
+            ${size !== '' ? `<div class="card-excerpt">${a.excerpt}</div>` : ''}
+            <div class="card-footer">
+                <span class="card-tag">${a.category || (isReview ? 'Review' : 'Guide')}</span>
+                <span class="card-link">Read →</span>
+            </div>
+        </div>
+    </div>`;
+}
+
+// ─── ARTICLE ─────────────────────────────────────
+function openArticle(id) {
+    const a = articles.find(x => x.id === id);
+    if (!a) return;
+    a.views = (a.views || 0) + 1;
+    const html = a.type === 'review' ? reviewHTML(a) : guideHTML(a);
+    document.getElementById('articleContent').innerHTML = html;
+    buildTOC(a);
+    document.getElementById('homeView').classList.add('hidden');
+    document.getElementById('articleView').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── TABLE OF CONTENTS ────────────────────────────
+function buildTOC(a) {
+    const sections = [];
+    if (a.type === 'review') {
+        sections.push({ id: 'overview', label: 'Overview' });
+        if (a.specs)     sections.push({ id: 'specs', label: 'Specifications' });
+        if (a.fullReview) a.fullReview.forEach((s, i) => sections.push({ id: `section-${i}`, label: s.heading }));
+        if (a.pros)      sections.push({ id: 'procons', label: 'Pros & Cons' });
+        sections.push({ id: 'verdict', label: 'Verdict' });
+    } else {
+        sections.push({ id: 'overview', label: 'Overview' });
+        sections.push({ id: 'picks', label: 'Top Picks' });
+        sections.push({ id: 'verdict', label: 'Final Thoughts' });
+    }
+    document.getElementById('tocLinks').innerHTML = sections.map((s, i) => `
+        <a class="toc-link" href="#${s.id}" onclick="scrollToSection('${s.id}'); return false;">${s.label}</a>
+        ${i === 0 ? '<div class="toc-sep"></div>' : ''}
+    `).join('');
+}
+
+function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ─── REVIEW HTML ─────────────────────────────────
+function reviewHTML(a) {
+    const subScores = a.subScores || {};
+    return `
+    <div class="article-card">
+        <div class="article-label" id="overview">${a.category || 'Review'}</div>
+        <h1 class="article-title">${a.title}</h1>
+        <div class="article-byline">
+            <span>📅 ${a.date}</span>
+            ${a.price ? `<span>💰 ${a.price}</span>` : ''}
+            <span>👁 ${a.views || 1} views</span>
+        </div>
+
+        ${a.images && a.images.length ? `<div class="img-gallery">${a.images.map(img=>`<img src="${img}" alt="${a.title}" loading="lazy">`).join('')}</div>` : ''}
+
+        <!-- SCORES -->
+        ${a.rating ? `
+        <div class="score-row">
+            <div class="score-overall">
+                <div class="big">${a.rating}</div>
+                <div class="lbl">Overall</div>
+            </div>
+            ${Object.keys(subScores).length ? `
+            <div class="sub-scores">
+                <div class="sub-scores-title">Score Breakdown</div>
+                ${Object.entries(subScores).map(([k,v]) => `
+                <div class="sub-score-row">
+                    <div class="sub-score-label">${k}</div>
+                    <div class="sub-score-bar"><div class="sub-score-fill" style="width:${v*10}%"></div></div>
+                    <div class="sub-score-num">${v}</div>
+                </div>`).join('')}
+            </div>` : ''}
+        </div>` : ''}
+
+        <!-- USE CASES -->
+        ${a.useCases ? `
+        <div class="use-cases">
+            ${a.useCases.map(u => `
+            <div class="use-case">
+                <span class="uc-icon">${u.icon}</span>
+                <span class="uc-label">${u.label}</span>
+                <div class="uc-stars">${'★'.repeat(u.stars)}<span class="dim">${'★'.repeat(5-u.stars)}</span></div>
+            </div>`).join('')}
+        </div>` : ''}
+
+        <!-- SUMMARY -->
+        ${a.summary ? `<div class="summary-box"><strong>Quick Take:</strong> ${a.summary}</div>` : ''}
+
+        <!-- TOP CTA -->
+        <div class="amazon-cta">
+            <h3>Buy the ${a.title.replace(' Review','')}</h3>
+            <p>${a.price ? `Current price: ${a.price} · ` : ''}Check latest deals on Amazon</p>
+            <a href="${a.amazonLink}" class="amazon-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+        </div>
+
+        <!-- SPECS -->
+        ${a.specs ? `
+        <div class="art-section" id="specs">
+            <h2>Specifications</h2>
+            <div class="specs-grid">
+                ${Object.entries(a.specs).map(([k,v]) => `
+                <div class="spec-card">
+                    <div class="spec-lbl">${k}</div>
+                    <div class="spec-val">${v}</div>
+                </div>`).join('')}
+            </div>
+        </div>` : ''}
+
+        <!-- REVIEW SECTIONS -->
+        ${a.fullReview ? a.fullReview.map((s, i) => `
+        <div class="art-section" id="section-${i}">
+            <h2>${s.heading}</h2>
+            ${s.paragraphs.map(p => `<p>${p}</p>`).join('')}
+            ${s.image ? `<img src="${s.image}" alt="${s.heading}">` : ''}
+        </div>`).join('') : ''}
+
+        <!-- PROS / CONS -->
+        ${a.pros || a.cons ? `
+        <div class="art-section" id="procons">
+            <h2>Pros & Cons</h2>
+            <div class="pros-cons">
+                ${a.pros ? `<div class="pros-card"><h3>What's Great</h3><ul>${a.pros.map(p=>`<li>${p}</li>`).join('')}</ul></div>` : ''}
+                ${a.cons ? `<div class="cons-card"><h3>Watch Out For</h3><ul>${a.cons.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : ''}
+            </div>
+        </div>` : ''}
+
+        <!-- VERDICT -->
+        ${a.verdict ? `
+        <div class="art-section" id="verdict">
+            <h2>Verdict</h2>
+            <div class="verdict-box">
+                <h3>Our Take</h3>
+                <p>${a.verdict}</p>
+                ${a.bestFor ? `<div class="best-for"><strong>Best For:</strong> ${a.bestFor}</div>` : ''}
+            </div>
+        </div>` : ''}
+
+        <!-- BOTTOM CTA -->
+        <div class="amazon-cta">
+            <h3>Ready to Buy?</h3>
+            <p>Get the best price on Amazon</p>
+            <a href="${a.amazonLink}" class="amazon-btn" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+        </div>
+
+        <!-- RELATED -->
+        ${a.relatedArticles && a.relatedArticles.length ? `
+        <div class="art-section">
+            <h2>Related Articles</h2>
+            <div class="related-grid">
+                ${a.relatedArticles.map(id => {
+                    const r = articles.find(x => x.id === id);
+                    return r ? `
+                    <div class="related-card" onclick="openArticle('${r.id}')">
+                        <img src="${r.image}" alt="${r.title}" loading="lazy">
+                        <div class="related-card-body"><h4>${r.title}</h4></div>
+                    </div>` : '';
+                }).join('')}
+            </div>
+        </div>` : ''}
+
+        <div class="disclosure"><strong>Disclosure:</strong> AI assisted with formatting this review. All testing, opinions, and scores are human-generated from hands-on use.</div>
+    </div>`;
+}
+
+// ─── GUIDE HTML ──────────────────────────────────
+function guideHTML(a) {
+    return `
+    <div class="article-card">
+        <div class="article-label" id="overview">Buying Guide</div>
+        <h1 class="article-title">${a.title}</h1>
+        <div class="article-byline">
+            <span>📅 ${a.date}</span>
+            <span>👁 ${a.views || 1} views</span>
+        </div>
+
+        ${a.intro ? `<div class="summary-box">${a.intro}</div>` : ''}
+
+        <div id="picks">
+        ${a.recommendations ? a.recommendations.map((r, i) => `
+        <div class="rec-item">
+            <div class="rec-top">
+                <div class="rec-name">${i + 1}. ${r.name}${r.tag ? `<span>${r.tag}</span>` : ''}</div>
+                ${r.price ? `<div class="rec-price">${r.price}</div>` : ''}
+            </div>
+            <div class="rec-desc">${r.description}</div>
+            ${r.highlights ? `<div class="rec-highlights">${r.highlights.map(h=>`<span class="rec-highlight">✓ ${h}</span>`).join('')}</div>` : ''}
+            <div class="rec-btns">
+                ${r.reviewLink ? `<a href="#" class="btn-sm btn-ghost" onclick="openArticle('${r.reviewLink}'); return false;">Full Review</a>` : ''}
+                <a href="${r.amazonLink}" class="btn-sm btn-primary" target="_blank" rel="nofollow noopener">View on Amazon →</a>
+            </div>
+        </div>`).join('') : ''}
+        </div>
+
+        ${a.verdict ? `
+        <div class="verdict-box" id="verdict">
+            <h3>Our Final Recommendation</h3>
+            <p>${a.verdict}</p>
+        </div>` : ''}
+
+        ${a.relatedArticles && a.relatedArticles.length ? `
+        <div class="art-section">
+            <h2>Related Reviews</h2>
+            <div class="related-grid">
+                ${a.relatedArticles.map(id => {
+                    const r = articles.find(x => x.id === id);
+                    return r ? `
+                    <div class="related-card" onclick="openArticle('${r.id}')">
+                        <img src="${r.image}" alt="${r.title}" loading="lazy">
+                        <div class="related-card-body"><h4>${r.title}</h4></div>
+                    </div>` : '';
+                }).join('')}
+            </div>
+        </div>` : ''}
+
+        <div class="disclosure"><strong>Disclosure:</strong> This guide contains affiliate links. We earn a commission at no extra cost to you. AI assisted with formatting; recommendations are based on real testing.</div>
+    </div>`;
+}
+
+// ─── SHOW HOME ───────────────────────────────────
 function showHome() {
     document.getElementById('homeView').classList.remove('hidden');
     document.getElementById('articleView').classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Update Stats
+// ─── STATS ───────────────────────────────────────
 function updateStats() {
-    const reviewCount = articles.filter(a => a.type === 'review').length;
-    const guideCount = articles.filter(a => a.type === 'recommendation').length;
-    document.getElementById('reviewCount').textContent = reviewCount;
-    document.getElementById('guideCount').textContent = guideCount;
+    document.getElementById('reviewCount').textContent = articles.filter(a => a.type === 'review').length;
+    document.getElementById('guideCount').textContent  = articles.filter(a => a.type === 'recommendation').length;
 }
