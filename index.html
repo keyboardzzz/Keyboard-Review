@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KeyboardHub - Mechanical Keyboard Reviews & Recommendations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>KeyboardHub - Expert Mechanical Keyboard Reviews & Guides</title>
+    <meta name="description" content="Find the perfect mechanical keyboard with our expert reviews and buying guides. Compare specs, prices, and features.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,754 +13,833 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg: #ffffff;
+            --bg-subtle: #f8fafc;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+        }
+
         body {
-            font-family: 'Work Sans', sans-serif;
-            background: #faf8f5;
-            color: #2a2a2a;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
         }
 
         /* Navigation */
         nav {
-            background: #fff;
-            border-bottom: 2px solid #e8dfd4;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 20px var(--shadow);
         }
 
         nav .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1.3rem 2.5rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-family: 'Merriweather', serif;
             font-size: 1.5rem;
             font-weight: 900;
-            color: #d97642;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             cursor: pointer;
-            letter-spacing: -0.5px;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem;
             list-style: none;
             align-items: center;
         }
 
         .nav-links a {
-            color: #5a5a5a;
+            color: var(--text);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.95rem;
             transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: #d97642;
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.6rem 1rem;
+            padding-left: 2.5rem;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            width: 200px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            width: 280px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
         }
 
         /* Container */
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2.5rem;
+            padding: 0 2rem;
         }
 
         /* Hero */
         .hero {
-            background: linear-gradient(135deg, #fff 0%, #fef6f0 100%);
-            padding: 5rem 0;
-            border-bottom: 2px solid #e8dfd4;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="none"/><circle cx="30" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
         }
 
         .hero-content {
+            position: relative;
+            z-index: 1;
             max-width: 800px;
         }
 
         .hero h1 {
-            font-family: 'Merriweather', serif;
             font-size: 3.5rem;
             font-weight: 900;
             margin-bottom: 1.5rem;
-            color: #1a1a1a;
-            line-height: 1.2;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease;
         }
 
         .hero p {
             font-size: 1.3rem;
-            color: #5a5a5a;
+            opacity: 0.95;
             margin-bottom: 2rem;
-            line-height: 1.6;
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
 
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            margin-top: 3rem;
+        .hero-cta {
+            display: inline-flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
         }
 
-        .stat {
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            background: var(--bg-subtle);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
             text-align: center;
         }
 
+        .stat-item {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
         .stat-number {
-            font-family: 'Merriweather', serif;
             font-size: 2.5rem;
             font-weight: 900;
-            color: #d97642;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: block;
         }
 
         .stat-label {
+            color: var(--text-light);
             font-size: 0.9rem;
-            color: #888;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        /* Content Sections */
-        .content-section {
-            padding: 4rem 0;
+        /* Filter Bar */
+        .filter-bar {
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            background: var(--bg);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
         }
 
-        .section-header {
+        .filter-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #e8dfd4;
-        }
-
-        .section-title {
-            font-family: 'Merriweather', serif;
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #1a1a1a;
+            gap: 2rem;
         }
 
         .filter-tabs {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .filter-tab {
-            padding: 0.5rem 1.2rem;
-            background: #fff;
-            border: 2px solid #e8dfd4;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            color: #5a5a5a;
-            transition: all 0.2s;
-        }
-
-        .filter-tab:hover, .filter-tab.active {
-            background: #d97642;
-            border-color: #d97642;
-            color: white;
-        }
-
-        /* Grid Layouts */
-        .featured-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .featured-main {
+            padding: 0.7rem 1.5rem;
             background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-
-        .featured-main:hover {
-            transform: translateY(-4px);
-        }
-
-        .featured-image {
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .featured-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .featured-badge {
-            position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
-            background: #d97642;
-            color: white;
-            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
             border-radius: 25px;
+            cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .featured-content {
-            padding: 2.5rem;
-        }
-
-        .featured-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            color: var(--text-light);
+            transition: all 0.2s;
             font-size: 0.9rem;
-            color: #888;
         }
 
-        .featured-content h2 {
-            font-family: 'Merriweather', serif;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            color: #1a1a1a;
-            line-height: 1.3;
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
-        .featured-excerpt {
-            color: #5a5a5a;
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-
-        .read-more-btn {
-            display: inline-block;
-            padding: 0.8rem 1.8rem;
-            background: #d97642;
+        .filter-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
             color: white;
-            text-decoration: none;
-            border-radius: 8px;
+        }
+
+        .sort-dropdown {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
             font-weight: 600;
+            color: var(--text);
             transition: all 0.2s;
         }
 
-        .read-more-btn:hover {
-            background: #c2643a;
-            transform: translateX(4px);
+        .sort-dropdown:hover {
+            border-color: var(--primary);
         }
 
-        .featured-sidebar {
+        /* Content Grid - VARIED LAYOUTS */
+        .content-section {
+            padding: 3rem 0;
+        }
+
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            grid-auto-rows: 200px;
+        }
+
+        /* Card Variations */
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
         }
 
-        .sidebar-item {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            cursor: pointer;
-            transition: transform 0.2s;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow);
         }
 
-        .sidebar-item:hover {
-            transform: translateX(4px);
+        /* Featured Card - Takes 2x2 space */
+        .card.featured {
+            grid-column: span 2;
+            grid-row: span 2;
         }
 
-        .sidebar-image {
+        /* Large Card - Takes 2x1 space */
+        .card.large {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        /* Tall Card - Takes 1x2 space */
+        .card.tall {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+
+        /* Standard Card - Takes 1x1 space */
+        .card.standard {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        .card-image {
             width: 100%;
-            height: 140px;
+            height: 100%;
+            position: relative;
             overflow: hidden;
+            flex: 1;
         }
 
-        .sidebar-image img {
+        .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .sidebar-content {
-            padding: 1.5rem;
+        .card:hover .card-image img {
+            transform: scale(1.1);
         }
 
-        .sidebar-content h3 {
-            font-family: 'Merriweather', serif;
-            font-size: 1.2rem;
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 2rem;
+            color: white;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card.featured .card-overlay {
+            padding: 3rem;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 700;
-            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        .card-badge.review {
+            background: var(--primary);
+        }
+
+        .card-badge.guide {
+            background: var(--secondary);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
             line-height: 1.3;
         }
 
-        .sidebar-meta {
-            font-size: 0.85rem;
-            color: #888;
+        .card.featured .card-title {
+            font-size: 2rem;
         }
 
-        /* Standard Grid */
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .article-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .article-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-
-        .article-image {
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
-        }
-
-        .article-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .article-card:hover .article-image img {
-            transform: scale(1.05);
-        }
-
-        .article-content {
-            padding: 2rem;
-        }
-
-        .article-type {
-            display: inline-block;
-            font-size: 0.75rem;
-            padding: 0.3rem 0.8rem;
-            background: #fef6f0;
-            color: #d97642;
-            border-radius: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.8rem;
-        }
-
-        .article-content h3 {
-            font-family: 'Merriweather', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 0.8rem;
-            line-height: 1.3;
-        }
-
-        .article-excerpt {
-            color: #5a5a5a;
+        .card-excerpt {
             font-size: 0.95rem;
-            line-height: 1.6;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .card.standard .card-excerpt {
+            display: none;
+        }
+
+        /* Quick Preview on Hover */
+        .card-quick-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(99, 102, 241, 0.98);
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+        }
+
+        .card:hover .card-quick-info {
+            opacity: 1;
+        }
+
+        .quick-info-title {
+            font-size: 1.3rem;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
 
-        .article-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid #f0f0f0;
+        .quick-info-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
         }
 
-        .article-date {
-            font-size: 0.85rem;
-            color: #888;
+        .quick-info-list li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
-        .article-arrow {
-            color: #d97642;
-            font-weight: 600;
+        .quick-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            color: var(--primary);
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            margin-top: auto;
         }
 
         /* Article View */
         .article-view {
             display: none;
             padding: 3rem 0 5rem;
+            animation: fadeIn 0.5s ease;
         }
 
         .article-view.active {
             display: block;
         }
 
-        .back-button {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .back-nav {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: #5a5a5a;
+            color: var(--text-light);
             text-decoration: none;
             margin-bottom: 3rem;
-            font-weight: 500;
-            transition: color 0.2s;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
-        .back-button:hover {
-            color: #d97642;
+        .back-nav:hover {
+            color: var(--primary);
+            gap: 1rem;
         }
 
         .article-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        .article-header-full {
+        .article-hero {
             margin-bottom: 3rem;
         }
 
-        .article-title-full {
-            font-family: 'Merriweather', serif;
+        .article-hero h1 {
             font-size: 3rem;
             font-weight: 900;
-            color: #1a1a1a;
+            margin-bottom: 1rem;
             line-height: 1.2;
-            margin-bottom: 1.5rem;
         }
 
-        .article-meta-full {
+        .article-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .meta-info {
             display: flex;
             gap: 2rem;
-            color: #888;
+            color: var(--text-light);
             font-size: 0.95rem;
-            padding-bottom: 2rem;
-            border-bottom: 2px solid #e8dfd4;
         }
 
-        .article-body {
-            background: white;
-            padding: 3rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
-
-        /* Review Specific Styles */
-        .review-score {
-            display: inline-flex;
+        .rating-display {
+            display: flex;
             align-items: center;
             gap: 1rem;
-            background: #fef6f0;
+            background: var(--bg-subtle);
             padding: 1rem 2rem;
-            border-radius: 12px;
-            margin: 2rem 0;
+            border-radius: 50px;
         }
 
-        .score-number {
-            font-family: 'Merriweather', serif;
-            font-size: 3rem;
+        .rating-number {
+            font-size: 2.5rem;
             font-weight: 900;
-            color: #d97642;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .score-label {
-            font-size: 0.9rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* Article Content */
+        .article-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px var(--shadow);
         }
 
-        .summary-box {
-            background: #fef6f0;
-            border-left: 4px solid #d97642;
-            padding: 2rem;
-            margin: 2.5rem 0;
-            border-radius: 8px;
-        }
-
-        .summary-box p {
-            color: #2a2a2a;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .specs-section {
+        .content-block {
             margin: 3rem 0;
         }
 
-        .section-heading {
-            font-family: 'Merriweather', serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #1a1a1a;
+        .content-block h2 {
+            font-size: 2rem;
+            font-weight: 800;
             margin-bottom: 1.5rem;
+            color: var(--text);
         }
 
+        .content-block p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* Specs Table */
         .specs-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        .spec-item {
-            background: #faf8f5;
+        .spec-card {
+            background: var(--bg-subtle);
             padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #e8dfd4;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .spec-card:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-4px);
         }
 
         .spec-label {
             font-size: 0.8rem;
-            color: #888;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 700;
+            opacity: 0.7;
             margin-bottom: 0.5rem;
-            font-weight: 600;
         }
 
         .spec-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
 
-        .pros-cons {
+        /* Pros/Cons */
+        .pros-cons-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
             margin: 3rem 0;
         }
 
-        .pros-box, .cons-box {
-            background: #faf8f5;
+        .pros-card, .cons-card {
             padding: 2rem;
-            border-radius: 12px;
-            border: 2px solid #e8dfd4;
+            border-radius: 20px;
+            background: var(--bg-subtle);
         }
 
-        .pros-box h3 {
-            color: #2d7a4f;
-            font-size: 1.3rem;
+        .pros-card {
+            border-left: 4px solid #10b981;
+        }
+
+        .cons-card {
+            border-left: 4px solid #ef4444;
+        }
+
+        .pros-card h3 {
+            color: #10b981;
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            font-weight: 700;
         }
 
-        .cons-box h3 {
-            color: #c24838;
-            font-size: 1.3rem;
+        .cons-card h3 {
+            color: #ef4444;
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            font-weight: 700;
         }
 
-        .pros-box ul, .cons-box ul {
+        .pros-card ul, .cons-card ul {
             list-style: none;
         }
 
-        .pros-box li, .cons-box li {
-            padding: 0.6rem 0;
+        .pros-card li, .cons-card li {
+            padding: 0.8rem 0;
             padding-left: 2rem;
             position: relative;
-            color: #2a2a2a;
             font-size: 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .pros-box li::before {
+        .pros-card li::before {
             content: "✓";
             position: absolute;
             left: 0;
-            color: #2d7a4f;
+            color: #10b981;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
 
-        .cons-box li::before {
+        .cons-card li::before {
             content: "✗";
             position: absolute;
             left: 0;
-            color: #c24838;
+            color: #ef4444;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
 
-        /* Amazon CTA */
-        .amazon-cta {
-            background: linear-gradient(135deg, #146eb4 0%, #0f5a94 100%);
+        /* CTA Box */
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             padding: 3rem;
-            border-radius: 16px;
+            border-radius: 24px;
             text-align: center;
+            color: white;
             margin: 3rem 0;
-            box-shadow: 0 8px 24px rgba(20, 110, 180, 0.3);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
         }
 
-        .amazon-cta h3 {
-            color: white;
-            font-family: 'Merriweather', serif;
+        .cta-box h3 {
             font-size: 2rem;
             margin-bottom: 1rem;
             font-weight: 900;
         }
 
-        .amazon-cta p {
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 2rem;
+        .cta-box p {
             font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
         }
 
-        .amazon-button {
+        .cta-btn {
             display: inline-block;
             padding: 1.2rem 3rem;
-            background: #ff9900;
-            color: white;
+            background: white;
+            color: var(--primary);
             text-decoration: none;
-            font-weight: 700;
-            border-radius: 10px;
-            transition: all 0.2s;
+            font-weight: 800;
+            border-radius: 15px;
+            transition: all 0.3s;
             font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
         }
 
-        .amazon-button:hover {
-            background: #e88b00;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.5);
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Recommendation List Items */
-        .recommendation-item {
-            background: #faf8f5;
-            padding: 2rem;
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
             border-radius: 12px;
-            border: 2px solid #e8dfd4;
-            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .recommendation-header {
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Recommendation Items */
+        .recommendation-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .recommendation-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .rec-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
             margin-bottom: 1rem;
         }
 
-        .recommendation-header h3 {
-            font-family: 'Merriweather', serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1a1a1a;
+        .rec-header h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
         }
 
-        .recommendation-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #d97642;
+        .rec-price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
         }
 
-        .recommendation-item p {
-            color: #5a5a5a;
-            line-height: 1.7;
-            margin-bottom: 1rem;
-        }
-
-        .recommendation-footer {
+        .rec-buttons {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
         }
 
-        .btn-secondary {
-            padding: 0.7rem 1.5rem;
-            background: white;
-            color: #d97642;
-            border: 2px solid #d97642;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: #d97642;
-            color: white;
-        }
-
-        .btn-primary {
-            padding: 0.7rem 1.5rem;
-            background: #d97642;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-primary:hover {
-            background: #c2643a;
-        }
-
-        /* Verdict Box */
-        .verdict-box {
-            background: #fef6f0;
-            border: 3px solid #d97642;
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin: 3rem 0;
-        }
-
-        .verdict-box h3 {
-            font-family: 'Merriweather', serif;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #1a1a1a;
-            font-weight: 900;
-        }
-
-        .verdict-box p {
-            color: #2a2a2a;
-            line-height: 1.8;
-            font-size: 1.05rem;
-            margin-bottom: 1rem;
-        }
-
-        .best-for {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 1.5rem;
-        }
-
-        .best-for strong {
-            color: #d97642;
-            font-weight: 700;
-        }
-
-        /* Disclosure */
-        .disclosure {
-            background: #fffef8;
-            border: 2px solid #f5e6d3;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 3rem 0;
-            font-size: 0.9rem;
-            color: #6b5d47;
-        }
-
         /* Footer */
         footer {
-            background: #2a2a2a;
-            color: #ccc;
+            background: var(--text);
+            color: white;
             padding: 3rem 0;
             margin-top: 5rem;
         }
@@ -768,51 +848,57 @@
             text-align: center;
         }
 
-        footer p {
-            font-size: 0.95rem;
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .masonry-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
-        /* Responsive */
         @media (max-width: 968px) {
-            .featured-grid {
+            .masonry-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card.featured,
+            .card.large {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .masonry-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+            }
+
+            .card.featured,
+            .card.large,
+            .card.tall,
+            .card.standard {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .pros-cons-grid {
                 grid-template-columns: 1fr;
             }
 
-            .articles-grid {
+            .specs-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
             .hero h1 {
                 font-size: 2.5rem;
             }
-        }
 
-        @media (max-width: 768px) {
-            .articles-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pros-cons {
-                grid-template-columns: 1fr;
-            }
-
-            .specs-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-stats {
+            .filter-container {
                 flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .filter-tabs {
-                flex-wrap: wrap;
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: start;
-                gap: 1rem;
+                align-items: stretch;
             }
         }
 
@@ -822,13 +908,17 @@
     </style>
 </head>
 <body>
-    <nav>
+    <nav id="mainNav">
         <div class="container">
-            <div class="logo" onclick="showHome()">KeyboardHub</div>
+            <div class="logo" onclick="showHome()">⌨️ KeyboardHub</div>
             <ul class="nav-links">
                 <li><a href="#" onclick="showHome(); return false;">Home</a></li>
-                <li><a href="#" onclick="showSection('reviews'); return false;">Reviews</a></li>
-                <li><a href="#" onclick="showSection('recommendations'); return false;">Guides</a></li>
+                <li><a href="#" onclick="filterContent('review'); return false;">Reviews</a></li>
+                <li><a href="#" onclick="filterContent('recommendation'); return false;">Guides</a></li>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search keyboards..." id="searchInput">
+                </div>
             </ul>
         </div>
     </nav>
@@ -838,337 +928,79 @@
         <section class="hero">
             <div class="container">
                 <div class="hero-content">
-                    <h1>Your Guide to Finding the Perfect Mechanical Keyboard</h1>
-                    <p>In-depth reviews and expert recommendations to help you make the right choice. Real testing, honest opinions.</p>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <span class="stat-number" id="reviewCount">0</span>
-                            <span class="stat-label">Reviews</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number" id="guideCount">0</span>
-                            <span class="stat-label">Buying Guides</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">5+</span>
-                            <span class="stat-label">Years Experience</span>
-                        </div>
+                    <h1>Find Your Perfect Mechanical Keyboard</h1>
+                    <p>Expert reviews, detailed comparisons, and buying guides to help you make the right choice.</p>
+                    <div class="hero-cta">
+                        <a href="#content" class="btn btn-primary">Browse Reviews</a>
+                        <a href="#" onclick="filterContent('recommendation'); return false;" class="btn btn-outline">Buying Guides</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured Content -->
-        <section class="content-section">
+        <section class="quick-stats">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Featured</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="reviewCount">0</span>
+                        <span class="stat-label">Reviews</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="guideCount">0</span>
+                        <span class="stat-label">Guides</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Keyboards Tested</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
                 </div>
-                <div id="featuredContent"></div>
             </div>
         </section>
 
-        <!-- Latest Content -->
-        <section class="content-section" style="background: white; padding: 4rem 0;">
+        <div class="filter-bar" id="filterBar">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Latest Articles</h2>
+                <div class="filter-container">
                     <div class="filter-tabs">
-                        <div class="filter-tab active" onclick="filterContent('all')">All</div>
-                        <div class="filter-tab" onclick="filterContent('review')">Reviews</div>
-                        <div class="filter-tab" onclick="filterContent('recommendation')">Guides</div>
+                        <div class="filter-tab active" data-filter="all" onclick="filterContent('all')">All</div>
+                        <div class="filter-tab" data-filter="review" onclick="filterContent('review')">Reviews</div>
+                        <div class="filter-tab" data-filter="recommendation" onclick="filterContent('recommendation')">Buying Guides</div>
                     </div>
+                    <select class="sort-dropdown" onchange="sortContent(this.value)">
+                        <option value="latest">Latest First</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
                 </div>
-                <div class="articles-grid" id="articlesGrid"></div>
-            </div>
-        </section>
-
-        <div class="container">
-            <div class="disclosure">
-                <strong>Transparency:</strong> This site contains affiliate links. When you purchase through our links, we may earn a commission at no cost to you. This supports our work but never influences our honest opinions. AI assists with formatting; all reviews are based on real hands-on testing.
             </div>
         </div>
+
+        <section class="content-section" id="content">
+            <div class="container">
+                <div class="masonry-grid" id="contentGrid"></div>
+            </div>
+        </section>
     </div>
 
     <!-- Article View -->
     <div id="articleView" class="article-view">
         <div class="container">
-            <a href="#" class="back-button" onclick="showHome(); return false;">← Back to Home</a>
+            <a href="#" class="back-nav" onclick="showHome(); return false;">← Back to All Articles</a>
             <div id="articleContent" class="article-container"></div>
         </div>
     </div>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 KeyboardHub. Helping you find your perfect mechanical keyboard.</p>
+            <p>&copy; 2024 KeyboardHub. Expert mechanical keyboard reviews and buying guides.</p>
+            <p style="margin-top: 0.5rem; opacity: 0.7; font-size: 0.9rem;">Affiliate disclosure: We earn from qualifying purchases at no cost to you.</p>
         </div>
     </footer>
 
     <script src="articles.js"></script>
-    <script>
-        let currentFilter = 'all';
-
-        function filterContent(type) {
-            currentFilter = type;
-            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-            renderArticlesGrid();
-        }
-
-        function renderFeatured() {
-            const featured = articles.slice(0, 3);
-            const html = `
-                <div class="featured-grid">
-                    <div class="featured-main" onclick="showArticle('${featured[0].id}')">
-                        <div class="featured-image">
-                            <img src="${featured[0].image}" alt="${featured[0].title}">
-                            <div class="featured-badge">${featured[0].type === 'review' ? 'Review' : 'Guide'}</div>
-                        </div>
-                        <div class="featured-content">
-                            <div class="featured-meta">
-                                <span>${featured[0].date}</span>
-                                ${featured[0].rating ? `<span>• Rating: ${featured[0].rating}/10</span>` : ''}
-                            </div>
-                            <h2>${featured[0].title}</h2>
-                            <p class="featured-excerpt">${featured[0].excerpt}</p>
-                            <a href="#" class="read-more-btn" onclick="event.stopPropagation(); showArticle('${featured[0].id}'); return false;">Read ${featured[0].type === 'review' ? 'Review' : 'Guide'} →</a>
-                        </div>
-                    </div>
-                    <div class="featured-sidebar">
-                        ${featured.slice(1, 3).map(article => `
-                            <div class="sidebar-item" onclick="showArticle('${article.id}')">
-                                <div class="sidebar-image">
-                                    <img src="${article.image}" alt="${article.title}">
-                                </div>
-                                <div class="sidebar-content">
-                                    <h3>${article.title}</h3>
-                                    <div class="sidebar-meta">${article.date} • ${article.type === 'review' ? 'Review' : 'Guide'}</div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.getElementById('featuredContent').innerHTML = html;
-        }
-
-        function renderArticlesGrid() {
-            let filtered = currentFilter === 'all' ? articles : articles.filter(a => a.type === currentFilter);
-            const html = filtered.map(article => `
-                <div class="article-card" onclick="showArticle('${article.id}')">
-                    <div class="article-image">
-                        <img src="${article.image}" alt="${article.title}">
-                    </div>
-                    <div class="article-content">
-                        <span class="article-type">${article.type === 'review' ? 'Review' : 'Buying Guide'}</span>
-                        <h3>${article.title}</h3>
-                        <p class="article-excerpt">${article.excerpt}</p>
-                        <div class="article-footer">
-                            <span class="article-date">${article.date}</span>
-                            <span class="article-arrow">→</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('articlesGrid').innerHTML = html;
-        }
-
-        function showArticle(id) {
-            const article = articles.find(a => a.id === id);
-            if (!article) return;
-
-            let content = '';
-
-            if (article.type === 'review') {
-                content = renderReview(article);
-            } else {
-                content = renderRecommendation(article);
-            }
-
-            document.getElementById('articleContent').innerHTML = content;
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('articleView').classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        function renderReview(article) {
-            return `
-                <div class="article-header-full">
-                    <h1 class="article-title-full">${article.title}</h1>
-                    <div class="article-meta-full">
-                        <span>${article.date}</span>
-                        <span>•</span>
-                        <span>Review</span>
-                        ${article.price ? `<span>• ${article.price}</span>` : ''}
-                    </div>
-                </div>
-
-                <div class="article-body">
-                    ${article.rating ? `
-                        <div class="review-score">
-                            <div class="score-number">${article.rating}</div>
-                            <div>
-                                <div class="score-label">Overall</div>
-                                <div class="score-label">Score</div>
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    ${article.summary ? `
-                        <div class="summary-box">
-                            <p><strong>Quick Take:</strong> ${article.summary}</p>
-                        </div>
-                    ` : ''}
-
-                    <div class="amazon-cta">
-                        <h3>Buy ${article.title}</h3>
-                        <p>Check current pricing and availability on Amazon</p>
-                        <a href="${article.amazonLink}" class="amazon-button" target="_blank" rel="nofollow noopener">View on Amazon</a>
-                    </div>
-
-                    ${article.specs ? `
-                        <div class="specs-section">
-                            <h3 class="section-heading">Specifications</h3>
-                            <div class="specs-grid">
-                                ${Object.entries(article.specs).map(([key, value]) => `
-                                    <div class="spec-item">
-                                        <div class="spec-label">${key}</div>
-                                        <div class="spec-value">${value}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    ${article.pros || article.cons ? `
-                        <div class="pros-cons">
-                            ${article.pros ? `
-                                <div class="pros-box">
-                                    <h3>What's Great</h3>
-                                    <ul>
-                                        ${article.pros.map(pro => `<li>${pro}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            ${article.cons ? `
-                                <div class="cons-box">
-                                    <h3>What's Not</h3>
-                                    <ul>
-                                        ${article.cons.map(con => `<li>${con}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-
-                    ${article.verdict || article.bestFor ? `
-                        <div class="verdict-box">
-                            <h3>Final Verdict</h3>
-                            ${article.verdict ? `<p>${article.verdict}</p>` : ''}
-                            ${article.bestFor ? `
-                                <div class="best-for">
-                                    <strong>Best For:</strong> ${article.bestFor}
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-
-                    <div class="amazon-cta">
-                        <h3>Ready to Purchase?</h3>
-                        <p>Get the ${article.title} at the best price</p>
-                        <a href="${article.amazonLink}" class="amazon-button" target="_blank" rel="nofollow noopener">View on Amazon</a>
-                    </div>
-
-                    <div class="disclosure">
-                        <strong>Content Notice:</strong> AI assisted with formatting. All opinions and testing are human-generated and based on real hands-on experience.
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderRecommendation(article) {
-            return `
-                <div class="article-header-full">
-                    <h1 class="article-title-full">${article.title}</h1>
-                    <div class="article-meta-full">
-                        <span>${article.date}</span>
-                        <span>•</span>
-                        <span>Buying Guide</span>
-                    </div>
-                </div>
-
-                <div class="article-body">
-                    ${article.intro ? `
-                        <div class="summary-box">
-                            <p>${article.intro}</p>
-                        </div>
-                    ` : ''}
-
-                    <div class="specs-section">
-                        <h3 class="section-heading">Our Top Picks</h3>
-                        ${article.recommendations ? article.recommendations.map(rec => `
-                            <div class="recommendation-item">
-                                <div class="recommendation-header">
-                                    <h3>${rec.name}</h3>
-                                    ${rec.price ? `<div class="recommendation-price">${rec.price}</div>` : ''}
-                                </div>
-                                <p>${rec.description}</p>
-                                ${rec.highlights ? `
-                                    <div class="pros-box" style="margin-top: 1rem;">
-                                        <h3 style="font-size: 1rem;">Key Features</h3>
-                                        <ul>
-                                            ${rec.highlights.map(h => `<li>${h}</li>`).join('')}
-                                        </ul>
-                                    </div>
-                                ` : ''}
-                                <div class="recommendation-footer">
-                                    ${rec.reviewLink ? `<a href="#" onclick="showArticle('${rec.reviewLink}'); return false;" class="btn-secondary">Read Full Review</a>` : ''}
-                                    <a href="${rec.amazonLink}" class="btn-primary" target="_blank" rel="nofollow noopener">View on Amazon</a>
-                                </div>
-                            </div>
-                        `).join('') : ''}
-                    </div>
-
-                    ${article.verdict ? `
-                        <div class="verdict-box">
-                            <h3>Final Thoughts</h3>
-                            <p>${article.verdict}</p>
-                        </div>
-                    ` : ''}
-
-                    <div class="disclosure">
-                        <strong>Content Notice:</strong> AI assisted with formatting. All recommendations are based on real testing and experience.
-                    </div>
-                </div>
-            `;
-        }
-
-        function showHome() {
-            document.getElementById('homeView').classList.remove('hidden');
-            document.getElementById('articleView').classList.remove('active');
-            window.scrollTo(0, 0);
-        }
-
-        function showSection(section) {
-            if (section === 'reviews') {
-                filterContent('review');
-            } else if (section === 'recommendations') {
-                filterContent('recommendation');
-            }
-            document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function updateStats() {
-            const reviewCount = articles.filter(a => a.type === 'review').length;
-            const guideCount = articles.filter(a => a.type === 'recommendation').length;
-            document.getElementById('reviewCount').textContent = reviewCount;
-            document.getElementById('guideCount').textContent = guideCount;
-        }
-
-        // Initialize
-        renderFeatured();
-        renderArticlesGrid();
-        updateStats();
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
