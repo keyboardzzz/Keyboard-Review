@@ -13,7 +13,7 @@ const articles = [
         title: 'Keychron K2 Review',
         category: 'Wireless 75%',
         excerpt: 'Hot-swap switches, rock-solid wireless, and two weeks of battery in a compact package. The K2 earns its reputation.',
-        date: 'Feb 10, 2024',
+        date: 'Feb 10, 2026',
         image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80',
         images: [
             'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80',
