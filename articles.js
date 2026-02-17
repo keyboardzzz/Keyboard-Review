@@ -1,286 +1,307 @@
 // ==========================================
 // ARTICLES DATABASE
-// SEO-Optimized Structure
+// Two types: "review" and "recommendation"
 // ==========================================
 
 const articles = [
-    // EXAMPLE: SEO-Optimized Recommendation Article
-    {
-        type: 'recommendation',
-        id: 'best-wireless-mechanical-keyboards-2024',
-        title: 'Best Wireless Mechanical Keyboards for 2024',
-        excerpt: 'Top wireless mechanical keyboards tested and ranked. Find the perfect wireless keyboard for gaming, work, or productivity.',
-        date: 'Feb 15, 2024',
-        image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=800&q=80',
-        views: 0,
-        intro: 'Wireless mechanical keyboards have revolutionized desk setups, offering the tactile feel of mechanical switches without cable clutter. After testing dozens of models, we\'ve identified the best wireless mechanical keyboards across different budgets and use cases.',
-        recommendations: [
-            {
-                name: 'Keychron K2',
-                price: '$89',
-                description: 'The Keychron K2 stands out as our top overall pick for wireless mechanical keyboards. With hot-swappable switches, exceptional 2-week battery life, and seamless multi-device connectivity, it delivers professional performance at a reasonable price point.',
-                highlights: [
-                    'Hot-swappable Gateron switches - customize without soldering',
-                    'Up to 240 hours battery life with RGB enabled',
-                    'Connects to 3 devices simultaneously via Bluetooth',
-                    'Premium aluminum frame construction',
-                    'Mac and Windows compatible with included keycaps'
-                ],
-                reviewLink: 'keychron-k2-review',
-                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
-            },
-            {
-                name: 'Logitech MX Mechanical',
-                price: '$169',
-                description: 'For professionals seeking the quietest wireless mechanical experience, the Logitech MX Mechanical excels. Low-profile switches deliver mechanical feedback without disturbing coworkers, while Logitech\'s software ecosystem provides excellent customization.',
-                highlights: [
-                    'Low-profile mechanical switches for quiet operation',
-                    'Logitech Logi Options+ software with smart actions',
-                    'Premium build quality with metal top plate',
-                    'Backlit keys with smart illumination',
-                    'Multi-device switching with Easy-Switch buttons'
-                ],
-                reviewLink: null,
-                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
-            },
-            {
-                name: 'Keychron K3',
-                price: '$84',
-                description: 'The best ultra-portable wireless mechanical keyboard. At just 22mm thin with low-profile switches, the K3 fits easily in laptop bags while maintaining that mechanical feel. Perfect for digital nomads and minimalist setups.',
-                highlights: [
-                    'Ultra-slim 22mm profile',
-                    'Low-profile Gateron mechanical switches',
-                    'Compact 75% layout saves desk space',
-                    'Long battery life up to 34 hours',
-                    'Hot-swappable switch option available'
-                ],
-                reviewLink: null,
-                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
-            }
-        ],
-        verdict: 'For most users, the Keychron K2 offers the perfect balance of features, performance, and value at $89. If office noise is a concern, invest in the Logitech MX Mechanical. Travel frequently or love minimalist setups? The ultra-slim Keychron K3 is your best bet.',
-        relatedArticles: ['keychron-k2-review', 'best-mechanical-keyboards-under-100']
-    },
 
-    // EXAMPLE: Detailed Review with SEO
+    // ── REVIEW EXAMPLE ────────────────────────────────
     {
         type: 'review',
         id: 'keychron-k2-review',
-        title: 'Keychron K2 Review: Best Wireless Mechanical Keyboard for 2024',
-        excerpt: 'Complete Keychron K2 review after 3 weeks of testing. Hot-swap switches, excellent battery, and multi-device support make this the best wireless mechanical keyboard.',
+        hot: true,
+        title: 'Keychron K2 Review',
+        category: 'Wireless 75%',
+        excerpt: 'Hot-swap switches, rock-solid wireless, and two weeks of battery in a compact package. The K2 earns its reputation.',
         date: 'Feb 10, 2024',
         image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80',
         images: [
-            'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80',
-            'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&q=80',
-            'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400&q=80'
+            'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80',
+            'https://images.unsplash.com/photo-1595225476474-87563907a212?w=500&q=80',
+            'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=500&q=80'
         ],
         amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK',
         rating: 8.5,
         price: '$89',
         views: 0,
-        specs: {
-            Brand: 'Keychron',
-            Switches: 'Gateron Brown (Hot-swap)',
-            Layout: '75% (84 keys)',
-            Connection: 'Wireless Bluetooth 5.1 & USB-C',
-            Keycaps: 'ABS Double-shot',
-            Lighting: 'RGB (18 effects)',
-            Battery: '4000mAh (240hr with RGB)',
-            Weight: '600g',
-            Dimensions: '355 × 127 × 40mm',
-            'Hot-swap': 'Yes (version 2)'
+
+        // ── Sub-scores (each out of 10) ──
+        subScores: {
+            'Build':     8.5,
+            'Typing':    8.0,
+            'Wireless':  9.0,
+            'Features':  7.5,
+            'Value':     9.0,
         },
-        summary: 'The Keychron K2 is a versatile wireless mechanical keyboard that perfectly balances compact design with full functionality. After testing for 3 weeks as our daily driver, the hot-swappable switches, exceptional 2-week battery life, and reliable multi-device connectivity make it our top recommendation for anyone wanting wireless freedom.',
+
+        // ── Use-case ratings (stars out of 5) ──
+        useCases: [
+            { icon: '💻', label: 'Work',        stars: 5 },
+            { icon: '🎮', label: 'Gaming',       stars: 3 },
+            { icon: '✈️', label: 'Travel',       stars: 4 },
+            { icon: '👨‍💻', label: 'Programming', stars: 5 },
+        ],
+
+        specs: {
+            Brand:       'Keychron',
+            Switches:    'Gateron Brown (hot-swap)',
+            Layout:      '75% — 84 keys',
+            Connection:  'Bluetooth 5.1 / USB-C',
+            Keycaps:     'ABS double-shot',
+            Lighting:    'RGB',
+            Battery:     '4,000 mAh (~240 hrs)',
+            Weight:      '600 g',
+            Dimensions:  '355 × 127 × 40 mm',
+            'Hot-swap':  'Yes (version 2+)',
+        },
+
+        summary: 'The Keychron K2 is the wireless mechanical keyboard most people should buy. Hot-swappable switches, exceptional battery life, and reliable multi-device support make it an easy recommendation — especially at $89.',
+
         fullReview: [
             {
                 heading: 'Build Quality & Design',
                 paragraphs: [
-                    'The Keychron K2 immediately impresses with its solid aluminum frame. At 600g, it feels substantial without being too heavy for portability. The build quality is excellent for the price point - there\'s minimal flex in the chassis, and the construction feels durable enough for years of daily use.',
-                    'The 75% layout strikes an ideal balance between compactness and functionality. You get dedicated arrow keys and a full function row, making it practical for productivity work while still saving significant desk space compared to full-size keyboards. The incline is slightly higher than some competitors, which some users may find requires a wrist rest for extended typing sessions.',
-                    'Keychron includes two sets of keycaps - one for Mac and one for Windows - which is a thoughtful touch. The keyboard can switch between operating systems with a simple toggle switch. However, the included ABS keycaps are a slight disappointment; they\'re decent quality but will develop shine over time. Upgrading to PBT keycaps is recommended for long-term use.'
+                    'Pick up the K2 and the aluminum frame immediately communicates quality. At 600 g it feels planted without being burdensome, and the chassis shows essentially no flex. Keychron includes two incline levels via fold-out feet, and two sets of keycaps — one Mac, one Windows — with a toggle switch on the side.',
+                    'The 75% layout is the sweet spot for most users: you keep dedicated arrow keys and a full function row while shaving meaningful desk space. The only ergonomic caveat is the high profile — if you type for hours, budget $15 for a wrist rest. It makes a real difference.',
+                    'Keycaps are where Keychron cut corners. The included ABS double-shots are acceptable out of the box but will develop a greasy shine within a few months of heavy use. Plan to upgrade to PBT at some point — it\'s the one meaningful improvement you can make.'
                 ],
                 image: null
             },
             {
-                heading: 'Typing Experience & Switches',
+                heading: 'Typing Experience',
                 paragraphs: [
-                    'Equipped with Gateron Brown switches, the K2 delivers a satisfying tactile typing experience. The tactile bump is noticeable without being overly pronounced, making them versatile for both typing and gaming. Keystroke sound is moderate - audible enough to feel mechanical but not loud enough to disturb coworkers in an office environment.',
-                    'The hot-swappable sockets are a game-changer for this price range. You can easily swap switches without soldering, future-proofing your investment. During testing, we swapped in various switches including Gateron Yellows and Cherry MX Browns - the process took just 10 minutes with the included keycap and switch puller.',
-                    'Stabilizers show slight rattle on the spacebar and shift keys - not dealbreaking but noticeable. This is a common issue at this price point and can be improved with basic stabilizer modding using dielectric grease. For users not interested in modding, the rattle is mild enough to live with.'
+                    'Gateron Browns strike a middle path: tactile enough to feel satisfying without the loud clack that gets you dirty looks in a coffee shop. After three weeks of daily use — programming, writing, the occasional gaming session — they hold up well. The board sounds deeper than you\'d expect from a keyboard in this price range, partly thanks to the aluminum case and partly just good luck.',
+                    'Stabilizers are the one sore spot. Stock, the spacebar and shift keys rattle just enough to notice. Ten minutes with some dielectric grease solves it, but that\'s a step most buyers won\'t take. If you\'re picky about acoustic polish, budget the time. For everyone else, it\'s a mild annoyance at worst.',
+                    'The hot-swap sockets are legitimately great and something you don\'t often see below $100. Swapping switches is five minutes with the included puller — no soldering iron, no drama. We dropped in Gateron Yellows for gaming and popped the Browns back in for writing. Highly practical.'
                 ],
                 image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=800&q=80'
             },
             {
-                heading: 'Wireless Performance & Battery',
+                heading: 'Wireless & Battery',
                 paragraphs: [
-                    'The wireless performance is where the K2 truly shines. Bluetooth 5.1 connectivity is rock-solid with zero latency issues during our testing. We experienced no dropped connections or input lag, even when switching between devices. The keyboard can pair with up to 3 devices and switch between them with simple key combinations.',
-                    'Battery life is exceptional. With RGB lighting enabled at medium brightness, we achieved 14 days of use with 4-6 hours of typing per day. Turn off RGB and you\'re looking at multiple months between charges. The 4000mAh battery charges via USB-C in about 2-3 hours, and you can use the keyboard while charging.',
-                    'One minor inconvenience: there\'s no battery level indicator. You\'ll get a warning when battery is critically low, but we\'d prefer a way to check the current charge level.'
+                    'Bluetooth 5.1 is solid. We paired with a MacBook Pro, Windows desktop, and iPad and switched between all three with a key combination — no dropped connections, no perceptible lag. Bluetooth keyboards aren\'t recommended for competitive gaming, but for everything else, the connection is indistinguishable from wired.',
+                    'Battery life is genuinely impressive. Running RGB at half brightness and typing 4–6 hours daily, we charged after 14 days. Turn RGB off and you\'re looking at months. USB-C charging is appreciated; the board also functions fully while plugged in. Only complaint: no battery indicator beyond a low-battery warning.'
                 ],
                 image: null
             },
             {
-                heading: 'Software & Customization',
+                heading: 'Software & Value',
                 paragraphs: [
-                    'Unlike many competitors, the K2 doesn\'t have dedicated software for customization. All functions are controlled through keyboard shortcuts. While this keeps things simple and ensures cross-platform compatibility, power users may miss features like macro recording and advanced RGB programming.',
-                    'RGB lighting offers 18 pre-programmed effects controlled via function keys. The lighting is bright and even, though some users find the default effects too flashy. Unfortunately, without software, you can\'t create custom RGB profiles. This is the biggest limitation compared to competitors like the Keychron Q series.',
-                    'For most users, the function layer provides enough customization. You can adjust RGB effects, brightness, and speed. Media controls are easily accessible. The lack of software is actually a benefit for some - no bloatware, no driver issues, works immediately on any device.'
+                    'There\'s no desktop software. Every setting — RGB effects, brightness, speed, device switching — is handled through key combinations. This is a deliberate Keychron choice, and it mostly works. Downsides: no macro recording, no per-key RGB programming, no saved profiles. For most users, this isn\'t a problem. Power users who want those features should look at the Q series.',
+                    'At $89, the K2 is difficult to beat. Hot-swap sockets, aluminum construction, genuine wireless, and multi-device support — any one of these is a differentiator in this price bracket. Getting all four in one keyboard is rare. The minor compromises (ABS keycaps, stabilizer rattle, no software) are either fixable or ignorable. The K2 earns its reputation.'
                 ],
                 image: null
             }
         ],
+
         pros: [
-            'Hot-swappable switches - easy customization without soldering',
-            'Exceptional 2-week battery life with RGB enabled',
-            'Solid aluminum frame feels premium and durable',
-            'Pairs with 3 devices - seamless multi-device workflow',
-            'Mac and Windows compatible out of the box',
-            'Compact 75% layout with arrow keys and function row',
-            'Excellent wireless performance with zero lag',
-            'Great value at $89 for features offered'
+            'Hot-swappable switches — upgrade anytime, no soldering',
+            '14-day battery with RGB; months without',
+            'Pairs with 3 devices simultaneously',
+            'Solid aluminum frame — zero chassis flex',
+            'Mac & Windows compatible, toggle on the side',
+            'Genuinely great value at $89'
         ],
         cons: [
-            'Slight stabilizer rattle on spacebar and shift keys',
-            'No dedicated software for advanced customization',
-            'ABS keycaps will develop shine - PBT upgrade recommended',
-            'No battery level indicator',
-            'Higher profile may require wrist rest for some users'
+            'Stabilizer rattle on spacebar/shift (fixable but annoying)',
+            'No desktop software — limited RGB customization',
+            'ABS keycaps will shine over time',
+            'High profile — wrist rest recommended for long sessions',
+            'No battery level indicator'
         ],
-        verdict: 'The Keychron K2 delivers exceptional value as a wireless mechanical keyboard. Hot-swappable switches future-proof your investment, while reliable wireless performance and outstanding battery life make it perfect for multi-device setups. Minor quibbles like stabilizer rattle and ABS keycaps are easily forgiven at this price point. For $89, you\'re getting features typically found in keyboards costing twice as much.',
-        bestFor: 'Remote workers needing multi-device support, Mac users wanting a quality mechanical option, anyone seeking wireless freedom without compromises, budget-conscious enthusiasts who want hot-swap capability, programmers who switch between work and personal computers',
-        relatedArticles: ['best-wireless-mechanical-keyboards-2024', 'keychron-k3-review']
+        verdict: 'The Keychron K2 is the wireless mechanical keyboard most people should buy. It doesn\'t try to be the flashiest or the most feature-packed — it just delivers a reliable, comfortable typing experience with practical wireless features at a price that doesn\'t sting. Upgrade the keycaps when you feel like it, lube the stabs when you feel like it. As-is, it\'s excellent.',
+        bestFor: 'Developers and writers who switch between multiple devices, Mac users, anyone wanting wireless freedom, budget-conscious enthusiasts who value hot-swap',
+        relatedArticles: ['best-wireless-mechanical-keyboards-2024', 'best-mechanical-keyboards-under-100']
     },
 
-    // EXAMPLE: Quick Budget Guide
+
+    // ── RECOMMENDATION EXAMPLE ─────────────────────────
+    {
+        type: 'recommendation',
+        id: 'best-wireless-mechanical-keyboards-2024',
+        hot: true,
+        title: 'Best Wireless Mechanical Keyboards for 2024',
+        category: 'Wireless',
+        excerpt: 'Cut the cord without sacrificing feel. Our tested picks for every budget, from $65 to $200.',
+        date: 'Feb 15, 2024',
+        image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=800&q=80',
+        views: 0,
+        intro: 'Wireless mechanical keyboards have finally caught up with their wired counterparts. Modern options deliver reliable, low-latency connections and battery lives measured in weeks. Here are our tested picks across budgets — no filler, just keyboards worth your money.',
+        recommendations: [
+            {
+                name: 'Keychron K2',
+                tag: '⭐ Best Overall',
+                price: '$89',
+                description: 'The wireless keyboard most people should buy. Hot-swap switches, two-week battery, and seamless three-device pairing make this a genuinely practical daily driver. Read our full review for the deep dive.',
+                highlights: ['Hot-swappable switches', '14-day battery (RGB on)', 'Pairs with 3 devices', 'Aluminum frame'],
+                reviewLink: 'keychron-k2-review',
+                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
+            },
+            {
+                name: 'Logitech MX Mechanical',
+                tag: 'Best for Office',
+                price: '$169',
+                description: 'Logitech\'s low-profile mechanical option is the choice for open-plan offices. Quieter than standard mechanicals, excellent software, and smart backlighting that dims when you walk away.',
+                highlights: ['Low-profile quiet switches', 'Logi Options+ software', 'Smart backlight', 'Multi-device Easy-Switch'],
+                reviewLink: null,
+                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
+            },
+            {
+                name: 'Keychron K3',
+                tag: 'Best Compact',
+                price: '$84',
+                description: 'Ultra-slim at 22 mm, the K3 slips into a laptop bag without protest. Low-profile switches keep mechanical feel in a form factor that doesn\'t hog desk space.',
+                highlights: ['22 mm slim profile', 'Low-profile switches', '75% layout', 'Long battery life'],
+                reviewLink: null,
+                amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
+            }
+        ],
+        verdict: 'For most people: Keychron K2, no question. Office workers who need quiet: Logitech MX Mechanical. Always traveling: Keychron K3.',
+        relatedArticles: ['keychron-k2-review', 'best-mechanical-keyboards-under-100']
+    },
+
+
+    // ── SECOND RECOMMENDATION ─────────────────────────
     {
         type: 'recommendation',
         id: 'best-mechanical-keyboards-under-100',
-        title: 'Best Mechanical Keyboards Under $100 (2024 Guide)',
-        excerpt: 'Top budget mechanical keyboards that don\'t compromise on quality. Our tested picks under $100 for gaming, typing, and productivity.',
+        title: 'Best Mechanical Keyboards Under $100 (2024)',
+        category: 'Budget',
+        excerpt: 'Quality mechanical keyboards that prove you don\'t need to spend $200 to type well.',
         date: 'Feb 14, 2024',
         image: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&q=80',
         views: 0,
-        intro: 'Quality mechanical keyboards don\'t require $200+ investments. After testing dozens of budget options, we\'ve identified mechanical keyboards under $100 that deliver premium typing experiences without the premium price tag.',
+        intro: 'Budget keyboards have never been better. These picks under $100 deliver real mechanical feel, solid build quality, and features that would have cost twice as much two years ago.',
         recommendations: [
             {
                 name: 'Royal Kludge RK84',
+                tag: '⭐ Best Value',
                 price: '$65',
-                description: 'Incredible value that punches far above its weight class. The RK84 offers hot-swappable switches, wireless connectivity, and solid build quality - features typically found in keyboards twice the price.',
-                highlights: [
-                    'Hot-swappable switches for easy customization',
-                    'Triple mode: Bluetooth, 2.4GHz wireless, and wired USB-C',
-                    'Compact 75% layout perfect for small desks',
-                    'RGB backlighting with multiple effects',
-                    'PBT keycaps included - won\'t develop shine'
-                ],
+                description: 'Hot-swap switches, wireless, and PBT keycaps at $65. The RK84 shouldn\'t be this good. If you want the most features per dollar in mechanical keyboards, start here.',
+                highlights: ['Hot-swappable switches', 'Tri-mode wireless', 'PBT keycaps included', 'RGB'],
                 reviewLink: null,
                 amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
             },
             {
                 name: 'Keychron C1',
+                tag: 'Best Wired',
                 price: '$49',
-                description: 'The best entry point to mechanical keyboards. Keychron\'s budget wired option doesn\'t skimp on essentials - hot-swappable switches and reliable Gateron switches make this a steal at under $50.',
-                highlights: [
-                    'Hot-swappable Gateron switches',
-                    'Full-size layout with numpad',
-                    'Wired connection - no battery worries',
-                    'Compatible with Mac and Windows',
-                    'TKL and compact sizes also available'
-                ],
+                description: 'Keychron\'s entry-level wired board delivers hot-swap and Gateron switches for under $50. No wireless to worry about, no compromise on build. Just a good keyboard.',
+                highlights: ['Hot-swappable', 'Gateron switches', 'Full size + TKL options', 'Mac/Windows'],
                 reviewLink: null,
                 amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
             },
             {
                 name: 'Redragon K552',
+                tag: 'Best First Mech',
                 price: '$40',
-                description: 'Your first mechanical keyboard should be the K552. Compact TKL design, surprisingly solid metal construction, and genuine mechanical switches make this the perfect introduction to mechanical typing.',
-                highlights: [
-                    'TKL design saves desk space',
-                    'Metal and ABS construction',
-                    'Genuine mechanical switches (Outemu)',
-                    'Red backlighting',
-                    'Extremely affordable at $40'
-                ],
+                description: 'Your first mechanical keyboard. TKL layout, metal plate, genuine mechanical switches — all at $40. It won\'t win awards, but it\'ll show you what mechanical is all about.',
+                highlights: ['TKL compact design', 'Metal plate construction', 'Mechanical switches', '$40 price'],
                 reviewLink: null,
                 amazonLink: 'YOUR_AMAZON_AFFILIATE_LINK'
             }
         ],
-        verdict: 'The Royal Kludge RK84 is the clear winner for features and flexibility under $100. Need maximum value? The Keychron C1 at $49 is unbeatable. First mechanical keyboard? Start with the proven Redragon K552 at just $40.',
+        verdict: 'For features: RK84. For simplicity and reliability: Keychron C1. First keyboard ever: Redragon K552.',
         relatedArticles: ['keychron-k2-review', 'best-wireless-mechanical-keyboards-2024']
     },
 
     // ==========================================
-    // ADD YOUR ARTICLES BELOW
+    // ADD YOUR NEW ARTICLES BELOW
     // ==========================================
-    
-    // DETAILED REVIEW TEMPLATE:
+
+    // REVIEW TEMPLATE:
     /*
     {
         type: 'review',
         id: 'keyboard-name-review',
-        title: 'Keyboard Name Review: [SEO Keywords]',
-        excerpt: 'Complete [keyword] review after X weeks testing. [Key features] make this [use case].',
+        hot: false,             // set true for hot badge
+        title: 'Keyboard Name Review',
+        category: 'Category',
+        excerpt: 'One sentence summary of the keyboard for the card',
         date: 'Feb 16, 2024',
         image: 'https://images.unsplash.com/photo-xxxxx',
-        images: ['img1.jpg', 'img2.jpg', 'img3.jpg'], // Multiple product images
-        amazonLink: 'YOUR_LINK',
+        images: ['img1.jpg', 'img2.jpg', 'img3.jpg'],  // 3 images for gallery
+        amazonLink: 'YOUR_AMAZON_LINK',
         rating: 8.5,
         price: '$XX',
         views: 0,
-        specs: {
-            Brand: 'Brand',
-            Switches: 'Type',
-            Layout: '75%',
-            Connection: 'Wireless',
-            // Add all relevant specs
+
+        subScores: {
+            'Build':    8.0,
+            'Typing':   8.5,
+            'Wireless': 7.0,    // remove if wired only
+            'Features': 7.5,
+            'Value':    9.0,
         },
-        summary: 'One paragraph overview',
+
+        useCases: [
+            { icon: '💻', label: 'Work',        stars: 4 },
+            { icon: '🎮', label: 'Gaming',       stars: 5 },
+            { icon: '✈️', label: 'Travel',       stars: 3 },
+            { icon: '👨‍💻', label: 'Programming', stars: 4 },
+        ],
+
+        specs: {
+            Brand:      'Brand Name',
+            Switches:   'Switch Type',
+            Layout:     'Full / TKL / 75% / 65% / 60%',
+            Connection: 'Wired / Wireless',
+            Keycaps:    'PBT / ABS',
+            Lighting:   'RGB / White / None',
+            Weight:     'XXXg',
+        },
+
+        summary: '2-3 sentence overview',
+
         fullReview: [
             {
                 heading: 'Build Quality',
-                paragraphs: ['Para 1', 'Para 2', 'Para 3'],
-                image: 'optional-image.jpg' // Can be null
+                paragraphs: ['Paragraph 1...', 'Paragraph 2...'],
+                image: null   // or 'https://...'
             },
             {
                 heading: 'Typing Experience',
-                paragraphs: ['Detailed paragraphs...'],
-                image: null
-            }
-            // Add more sections
+                paragraphs: ['Paragraph 1...', 'Paragraph 2...'],
+                image: 'https://...'
+            },
+            // add more sections as needed
         ],
-        pros: ['Pro 1', 'Pro 2', ...],
-        cons: ['Con 1', 'Con 2', ...],
-        verdict: 'Final paragraph',
-        bestFor: 'Detailed target audience',
+
+        pros: ['Pro 1', 'Pro 2', 'Pro 3'],
+        cons: ['Con 1', 'Con 2'],
+        verdict: 'Final verdict paragraph.',
+        bestFor: 'Who this keyboard is best for',
         relatedArticles: ['related-id-1', 'related-id-2']
     },
     */
 
-    // QUICK RECOMMENDATION TEMPLATE:
+    // GUIDE TEMPLATE:
     /*
     {
         type: 'recommendation',
         id: 'best-keyboards-for-x',
-        title: 'Best [Category] Mechanical Keyboards',
-        excerpt: 'Top [category] keyboards tested and ranked...',
+        hot: false,
+        title: 'Best Keyboards for X (2024)',
+        category: 'Guide category',
+        excerpt: 'One sentence summary for the card',
         date: 'Feb 16, 2024',
         image: 'https://images.unsplash.com/photo-xxxxx',
         views: 0,
-        intro: 'Why this category matters...',
+        intro: 'Opening paragraph explaining the guide and what to expect.',
         recommendations: [
             {
                 name: 'Keyboard Name',
+                tag: '⭐ Best Overall',   // optional label
                 price: '$XX',
-                description: 'Why it's great',
-                highlights: ['Feature 1', 'Feature 2', ...],
-                reviewLink: 'review-id', // or null
-                amazonLink: 'YOUR_LINK'
-            }
-            // 3-5 recommendations
+                description: '2-3 sentence description of why this keyboard made the list.',
+                highlights: ['Feature 1', 'Feature 2', 'Feature 3'],
+                reviewLink: 'review-id-if-exists',  // or null
+                amazonLink: 'YOUR_AMAZON_LINK'
+            },
+            // 3-5 recommendations total
         ],
-        verdict: 'Final recommendation',
-        relatedArticles: ['related-1', 'related-2']
+        verdict: 'Final summary recommendation.',
+        relatedArticles: ['id1', 'id2']
     },
     */
 ];
