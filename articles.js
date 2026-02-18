@@ -8,13 +8,13 @@ const AFFILIATE_TAG = 'keyboardhub08-20';
 
 // Helper — builds an Amazon search URL with your tag
 function amzSearch(query) {
-    return `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=${AFFILIATE_TAG}`;
+    return `https://www.amazon.ca/s?k=${encodeURIComponent(query)}&tag=${AFFILIATE_TAG}`;
 }
 
 // Helper — builds an Amazon product URL from a full ASIN
 // Usage: amzProduct('B09MFMTMPD')
 function amzProduct(asin) {
-    return `https://www.amazon.com/dp/${asin}?tag=${AFFILIATE_TAG}`;
+    return `https://www.amazon.ca/dp/${asin}?tag=${AFFILIATE_TAG}`;
 }
 
 // ==========================================
