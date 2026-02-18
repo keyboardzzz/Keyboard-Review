@@ -4,7 +4,7 @@
 // Set your Amazon affiliate tag once here.
 // Every link on the site (cards, articles, on-the-desk) uses this.
 //
-const AFFILIATE_TAG = 'YOUR-TAG-20';
+const AFFILIATE_TAG = 'keyboardhub08-20';
 
 // Helper — builds an Amazon search URL with your tag
 function amzSearch(query) {
